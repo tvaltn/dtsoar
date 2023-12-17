@@ -1,4 +1,3 @@
-// Copy This Into Database
 CREATE (s1_mqtt:Switch{name:"Switch MQTT"})-[:CONNECTION]->(gw1_MQTT:Gateway{name:"MQTT Gateway"})
 CREATE (s2_opcua:Switch{name:"Switch OPC-UA"})-[:CONNECTION]->(gw2_OPCUA:Gateway{name:"OPC-UA Gateway"})
 CREATE (h1_HBW:Component{name:"HBW", ip:"10.0.0.3"})-[:CONNECTION]->(s1_mqtt)
