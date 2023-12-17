@@ -46,9 +46,10 @@ To initialize the dashboard:
 3. Click on the plus sign, and import dashboard.json.
 
 
+
 ## Configuring Test Bed
 
-The test bed has 4 programs that run on it.
+The test bed has 4 programs that run on it:
 
 1. Mininet
 2. Ryu SDN Controller
@@ -82,7 +83,7 @@ ifconfig eth1
 Copy the mn_code folder from local to the Mininet VM (copies to root, replace "mininet_ip" with the IP address from the VM.):
 
 ```
-scp -r -P 22 mn_code mininet@<ip_address>:~/
+scp -r -P 22 mn_code mininet@<mininet_ip>:~/
 ```
 
 Next up, create 4 local terminals. In all 4 of them, SSH into the Mininet VM:
@@ -93,7 +94,7 @@ ssh -Y -X mininet@<mininet_ip>
 
 And you are all set up. You might have to update some programs.
 
-### Mininet
+### 1 Mininet
 
 Mininet dependencies (if you get a X11 Error):
 
@@ -108,7 +109,7 @@ cd mn_code
 sudo mn --custom topology.py --topo topo --switch ovsk --controller remote -x
 ```
 
-### Ryu SDN Controller
+### 2 Ryu SDN Controller
 
 Ryu dependencies:
 
@@ -122,7 +123,7 @@ To run Ryu:
 ryu-manager ryu.app.rest_firewall
 ```
 
-### Shark
+### 3 Shark
 
 Shark dependencies:
 
@@ -150,10 +151,18 @@ cd mn_code
 python shark.py
 ```
 
-### Open Policy Agent
+### 4 Open Policy Agent
 
 Use the Docker image for running OPA:
 
 ```
 docker run -p 8181:8181 openpolicyagent/opa \run --server --log-level debug
+```
+
+## SOAR
+
+Inside the soar directory, run:
+
+```
+python soar.py <mininet_ip>
 ```
