@@ -169,7 +169,7 @@ python soar.py <mininet_ip>
 
 ## Running Scenarios
 
-From the pop-up terminals from running mininet, you can run data through the factory components to the gateway. Currently only the MQTT gateway is properly configured.
+From the pop-up terminals after running mininet, you can run data through the factory components to the gateway. Currently only the MQTT gateway is properly configured.
 
 To run a gateway, find the **gw1_MQTT** terminal and run:
 
