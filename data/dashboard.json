@@ -97,7 +97,9 @@
           "y": 0,
           "type": "table",
           "selection": {},
-          "settings": {}
+          "settings": {
+            "refreshRate": 3
+          }
         },
         {
           "id": "acdcdca9-7807-4e65-9397-3baa232d0759",
@@ -112,7 +114,9 @@
             "Component": "name",
             "Quarantine": "(no label)"
           },
-          "settings": {},
+          "settings": {
+            "refreshRate": 3
+          },
           "schema": [
             [
               "Component",
@@ -128,74 +132,87 @@
         {
           "id": "768c6f45-b30b-4e32-a7ba-b04003d8279a",
           "title": "DPS Data",
-          "query": "MATCH p=(host:Component{ip:\"10.0.0.6\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data\n\n\n",
+          "query": "MATCH p=(host:Component{ip:\"10.0.0.6\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data LIMIT 25\n\n\n",
           "width": 4,
           "height": 4,
           "x": 12,
           "y": 5,
           "type": "table",
           "selection": {},
-          "settings": {}
+          "settings": {
+            "refreshRate": 3
+          },
+          "schema": []
         },
         {
           "id": "272d7dd4-f8ba-4a51-8f7d-6de2c878b12b",
           "title": "HBW Data",
-          "query": "MATCH p=(host:Component{ip:\"10.0.0.3\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data\n\n\n",
+          "query": "MATCH p=(host:Component{ip:\"10.0.0.3\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data LIMIT 25\n\n\n",
           "width": 4,
           "height": 4,
           "x": 0,
           "y": 5,
           "type": "table",
           "selection": {},
-          "settings": {}
+          "settings": {
+            "refreshRate": 3
+          }
         },
         {
           "id": "b2696574-1eca-4796-b740-13bad998c74c",
           "title": "VGR Data",
-          "query": "MATCH p=(host:Component{ip:\"10.0.0.4\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data\n\n\n",
+          "query": "MATCH p=(host:Component{ip:\"10.0.0.4\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data LIMIT 25\n\n\n",
           "width": 4,
           "height": 4,
           "x": 4,
           "y": 5,
           "type": "table",
           "selection": {},
-          "settings": {}
+          "settings": {
+            "refreshRate": 3
+          }
         },
         {
           "id": "df6c5b99-254f-422d-9ea7-32d92c304ff1",
           "title": "SSC Data",
-          "query": "MATCH p=(host:Component{ip:\"10.0.0.5\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data\n\n\n",
+          "query": "MATCH p=(host:Component{ip:\"10.0.0.5\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data LIMIT 25\n\n\n",
           "width": 4,
           "height": 4,
           "x": 8,
           "y": 5,
           "type": "table",
           "selection": {},
-          "settings": {}
+          "settings": {
+            "refreshRate": 3
+          }
         },
         {
           "id": "43460d80-9b31-40f4-9491-fee039da18e2",
           "title": "SLD Data",
-          "query": "MATCH p=(host:Component{ip:\"10.0.0.8\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data\n\n\n",
+          "query": "MATCH p=(host:Component{ip:\"10.0.0.8\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data LIMIT 25\n\n\n",
           "width": 4,
           "height": 4,
           "x": 20,
           "y": 5,
           "type": "table",
           "selection": {},
-          "settings": {}
+          "settings": {
+            "refreshRate": 3
+          }
         },
         {
           "id": "a4c2d181-613c-4000-9a3f-5db2ddc1c3a5",
           "title": "MPO Data",
-          "query": "MATCH p=(host:Component{ip:\"10.0.0.7\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data\n\n\n",
+          "query": "MATCH p=(host:Component{ip:\"10.0.0.7\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data LIMIT 25\n\n\n",
           "width": 4,
           "height": 4,
           "x": 16,
           "y": 5,
           "type": "table",
           "selection": {},
-          "settings": {}
+          "settings": {
+            "refreshRate": 3
+          }
         }
       ]
     },
