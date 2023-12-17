@@ -117,6 +117,10 @@ Ryu dependencies:
 pip install gunicorn==20.1.0 eventlet==0.30.2
 ```
 
+```
+pip install ryu
+```
+
 To run Ryu:
 
 ```
