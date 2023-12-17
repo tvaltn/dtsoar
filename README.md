@@ -182,3 +182,12 @@ To run data through a host, open one of the host terminals *(only DPS does somet
 ```
 python host.py <data_file>
 ```
+
+Press Ctrl+V to cancel the host program.
+
+If you want to reset, you have to exit and then re-run:
+
+1. Ryu
+2. OPA
+3. Shark
+4. SOAR
