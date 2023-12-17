@@ -1,0 +1,13 @@
+// Copy This Into Database
+CREATE (s1_mqtt:Switch{name:"Switch MQTT"})-[:CONNECTION]->(gw1_MQTT:Gateway{name:"MQTT Gateway"})
+CREATE (s2_opcua:Switch{name:"Switch OPC-UA"})-[:CONNECTION]->(gw2_OPCUA:Gateway{name:"OPC-UA Gateway"})
+CREATE (h1_HBW:Component{name:"HBW", ip:"10.0.0.3"})-[:CONNECTION]->(s1_mqtt)
+CREATE (h2_VGR:Component{name:"VGR", ip:"10.0.0.4"})-[:CONNECTION]->(s1_mqtt)
+CREATE (h3_SSC:Component{name:"SSC", ip:"10.0.0.5"})-[:CONNECTION]->(s1_mqtt)
+CREATE (h4_DPS:Component{name:"DPS", ip:"10.0.0.6"})-[:CONNECTION]->(s1_mqtt)
+CREATE (h5_MPO:Component{name:"MPO", ip:"10.0.0.7"})-[:CONNECTION]->(s1_mqtt)
+CREATE (h6_SLD:Component{name:"SLD", ip:"10.0.0.8"})-[:CONNECTION]->(s1_mqtt)
+CREATE (h1_HBW)-[:CONNECTION]->(s2_opcua)
+CREATE (h2_VGR)-[:CONNECTION]->(s2_opcua)
+CREATE (h3_SSC)-[:CONNECTION]->(s2_opcua)
+CREATE (quarantine:Quarantine{name:"Quarantine"})
