@@ -166,3 +166,19 @@ Inside the soar directory, run:
 ```
 python soar.py <mininet_ip>
 ```
+
+## Running Scenarios
+
+From the pop-up terminals from running mininet, you can run data through the factory components to the gateway. Currently only the MQTT gateway is properly configured.
+
+To run a gateway, find the **gw1_MQTT** terminal and run:
+
+```
+python gateway.py
+```
+
+To run data through a host, open one of the host terminals *(only DPS does something right now)* and run:
+
+```
+python host.py <data_file>
+```
