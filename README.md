@@ -148,6 +148,10 @@ pip install pyshark
 pip install flask
 ```
 
+```
+pip install requests
+```
+
 To run Shark:
 
 ```
@@ -164,6 +168,14 @@ docker run -p 8181:8181 openpolicyagent/opa \run --server --log-level debug
 ```
 
 ## SOAR
+
+SOAR is run on the local machine.
+
+Dependencies:
+
+```
+pip install requests
+```
 
 Inside the soar directory, run:
 
