@@ -10,7 +10,7 @@
   },
   "pages": [
     {
-      "title": "New page",
+      "title": "Main Dashboard",
       "reports": [
         {
           "id": "32414678-b2f2-469c-9e45-853aa1af357d",
@@ -34,40 +34,80 @@
                 1.7105407283646574
               ],
               "1": [
-                -22.583152529167556,
-                -31.18339839146197
+                -29.939980242114512,
+                -33.615012464907146
               ],
               "2": [
-                47.04937345273603,
-                3.91729592359286
+                57.885351672805776,
+                4.378401379766043
               ],
               "3": [
-                39.583603965229834,
-                -30.605809756152063
+                37.65314924913508,
+                -30.90761251869251
               ],
               "4": [
-                21.429556218882897,
-                4.243170587431998
+                22.582319859315852,
+                4.2431705874319965
               ],
               "5": [
-                21.531830473686163,
-                -15.895158025157004
+                23.60680502646548,
+                -14.51184165663746
               ],
               "6": [
-                22.436973150314227,
-                26.93370712137978
+                23.35918406266058,
+                26.703154393293186
               ],
               "7": [
-                -35.38310051925796,
-                -9.722209809773794
+                -40.80221131649943,
+                -12.532119112047148
               ],
               "8": [
-                -32.01142903370633,
-                26.091053874764178
+                -39.036202289389706,
+                24.686099223627497
               ],
               "9": [
-                -38.17737336209943,
-                5.24234385879706
+                -41.18799047167802,
+                2.6331423638289455
+              ],
+              "11": [
+                -2.594649386591914,
+                0.6682585924256401
+              ],
+              "12": [
+                -13.825959078531035,
+                -31.478576407681313
+              ],
+              "13": [
+                57.52391512299505,
+                0.07365826608894421
+              ],
+              "14": [
+                43.72986400607105,
+                -31.39946553164848
+              ],
+              "15": [
+                25.926384060133397,
+                1.2155984398419573
+              ],
+              "16": [
+                26.551718511626184,
+                -15.928250836091063
+              ],
+              "17": [
+                26.374534657869752,
+                18.90799570250891
+              ],
+              "18": [
+                -30.72429680621168,
+                -17.114387009932216
+              ],
+              "19": [
+                -27.818404548365287,
+                19.40139089298328
+              ],
+              "20": [
+                -32.12330186281916,
+                -0.2386639077228292
               ]
             }
           },
@@ -90,7 +130,7 @@
         {
           "id": "6782188b-e13b-47c9-996e-27e634008520",
           "title": "SOAR Responses",
-          "query": "MATCH p=(s:SOAR)-[r:RESPONSE]->(resp:RESPONSE)\nRETURN resp.ip AS Address, resp.response AS Response, resp.reason AS Reason",
+          "query": "MATCH p=(s:SOAR)-[r:RESPONSE]->(resp:RESPONSE)\nRETURN resp.soar_id AS ID, resp.source as Source, resp.ip AS Address, resp.response AS Response, resp.reason AS Reason, resp.value as Data\nORDER BY resp.soar_id",
           "width": 10,
           "height": 5,
           "x": 0,
@@ -98,7 +138,8 @@
           "type": "table",
           "selection": {},
           "settings": {
-            "refreshRate": 3
+            "refreshRate": 3,
+            "columnWidths": "[0.25, 1, 1, 2, 2, 1]"
           }
         },
         {
@@ -115,7 +156,10 @@
             "Quarantine": "(no label)"
           },
           "settings": {
-            "refreshRate": 3
+            "refreshRate": 3,
+            "frozen": false,
+            "nodePositions": {},
+            "nodeColorScheme": "nivo"
           },
           "schema": [
             [
@@ -132,7 +176,7 @@
         {
           "id": "768c6f45-b30b-4e32-a7ba-b04003d8279a",
           "title": "DPS Data",
-          "query": "MATCH p=(host:Component{ip:\"10.0.0.6\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data LIMIT 25\n\n\n",
+          "query": "MATCH p=(host:Component{ip:\"10.0.0.6\"})-[r:DATA]->(d:Digital_Twin)\nRETURN d.dt_id AS ID, host.ip AS Address, d.data AS Data\nORDER BY d.dt_id DESC\nLIMIT 30",
           "width": 4,
           "height": 4,
           "x": 12,
@@ -140,14 +184,16 @@
           "type": "table",
           "selection": {},
           "settings": {
-            "refreshRate": 3
+            "refreshRate": 3,
+            "refreshButtonEnabled": false,
+            "autorun": true
           },
           "schema": []
         },
         {
           "id": "272d7dd4-f8ba-4a51-8f7d-6de2c878b12b",
           "title": "HBW Data",
-          "query": "MATCH p=(host:Component{ip:\"10.0.0.3\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data LIMIT 25\n\n\n",
+          "query": "MATCH p=(host:Component{ip:\"10.0.0.3\"})-[r:DATA]->(d:Digital_Twin)\nRETURN d.dt_id AS ID, host.ip AS Address, d.data AS Data\nORDER BY d.dt_id DESC\nLIMIT 30\n\n\n",
           "width": 4,
           "height": 4,
           "x": 0,
@@ -161,7 +207,7 @@
         {
           "id": "b2696574-1eca-4796-b740-13bad998c74c",
           "title": "VGR Data",
-          "query": "MATCH p=(host:Component{ip:\"10.0.0.4\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data LIMIT 25\n\n\n",
+          "query": "MATCH p=(host:Component{ip:\"10.0.0.4\"})-[r:DATA]->(d:Digital_Twin)\nRETURN d.dt_id AS ID, host.ip AS Address, d.data AS Data\nORDER BY d.dt_id DESC\nLIMIT 30\n\n",
           "width": 4,
           "height": 4,
           "x": 4,
@@ -175,7 +221,7 @@
         {
           "id": "df6c5b99-254f-422d-9ea7-32d92c304ff1",
           "title": "SSC Data",
-          "query": "MATCH p=(host:Component{ip:\"10.0.0.5\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data LIMIT 25\n\n\n",
+          "query": "MATCH p=(host:Component{ip:\"10.0.0.5\"})-[r:DATA]->(d:Digital_Twin)\nRETURN d.dt_id AS ID, host.ip AS Address, d.data AS Data\nORDER BY d.dt_id DESC\nLIMIT 30\n",
           "width": 4,
           "height": 4,
           "x": 8,
@@ -189,7 +235,7 @@
         {
           "id": "43460d80-9b31-40f4-9491-fee039da18e2",
           "title": "SLD Data",
-          "query": "MATCH p=(host:Component{ip:\"10.0.0.8\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data LIMIT 25\n\n\n",
+          "query": "MATCH p=(host:Component{ip:\"10.0.0.8\"})-[r:DATA]->(d:Digital_Twin)\nRETURN d.dt_id AS ID, host.ip AS Address, d.data AS Data\nORDER BY d.dt_id DESC\nLIMIT 30\n\n\n",
           "width": 4,
           "height": 4,
           "x": 20,
@@ -203,7 +249,7 @@
         {
           "id": "a4c2d181-613c-4000-9a3f-5db2ddc1c3a5",
           "title": "MPO Data",
-          "query": "MATCH p=(host:Component{ip:\"10.0.0.7\"})-[r:DATA]->(d:Digital_Twin)\nRETURN host.ip AS Address, d.data AS Data LIMIT 25\n\n\n",
+          "query": "MATCH p=(host:Component{ip:\"10.0.0.7\"})-[r:DATA]->(d:Digital_Twin)\nRETURN d.dt_id AS ID, host.ip AS Address, d.data AS Data\nORDER BY d.dt_id DESC\nLIMIT 30\n\n\n",
           "width": 4,
           "height": 4,
           "x": 16,
@@ -217,8 +263,142 @@
       ]
     },
     {
-      "title": "New page",
-      "reports": []
+      "title": "Second Dashboard",
+      "reports": [
+        {
+          "id": "827c361d-993c-4048-b7e6-da074ccc9777",
+          "title": "SOAR Responses",
+          "query": "MATCH p=(s:SOAR)-[r:RESPONSE]->(resp:RESPONSE)\nRETURN resp.soar_id AS ID, resp.source as Source, resp.ip AS Address, resp.response AS Response, resp.reason AS Reason, resp.value as Data\nORDER BY resp.soar_id\n\n\n\n",
+          "width": 10,
+          "height": 2,
+          "x": 0,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "columnWidths": "[0.25, 1, 1, 2, 2, 1]",
+            "refreshRate": 3
+          }
+        },
+        {
+          "id": "190b2ca2-8bbc-4131-bf3f-0d605ef3534b",
+          "title": "Quarantine",
+          "query": "MATCH p=(h:Component)-[r:QUARANTINE]->(q:Quarantine)\nRETURN p LIMIT 25\n\n\n",
+          "width": 10,
+          "height": 3,
+          "x": 0,
+          "y": 2,
+          "type": "graph",
+          "selection": {
+            "Component": "name",
+            "Quarantine": "name"
+          },
+          "settings": {
+            "refreshRate": 3,
+            "nodeColorScheme": "nivo"
+          },
+          "schema": [
+            [
+              "Component",
+              "ip",
+              "name"
+            ],
+            [
+              "Quarantine",
+              "name"
+            ]
+          ]
+        },
+        {
+          "id": "40124a7d-b812-47d4-82ef-a4d5db2f4f6b",
+          "title": "DPS Data",
+          "query": "MATCH p=(host:Component{ip:\"10.0.0.6\"})-[r:DATA]->(d:Digital_Twin)\nRETURN d.dt_id AS ID, host.ip AS Address, d.data AS Data\nORDER BY d.dt_id DESC\nLIMIT 30\n\n",
+          "width": 4,
+          "height": 5,
+          "x": 10,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {}
+        }
+      ]
+    },
+    {
+      "title": "Third Dashboard",
+      "reports": [
+        {
+          "id": "dbf90578-9862-49cf-a93c-82e1cc5e6daa",
+          "title": "Quarantine",
+          "query": "MATCH p=(h:Component)-[r:QUARANTINE]->(q:Quarantine)\nRETURN p LIMIT 25\n\n\n",
+          "width": 10,
+          "height": 3,
+          "x": 0,
+          "y": 3,
+          "type": "graph",
+          "selection": {
+            "Component": "name",
+            "Quarantine": "(no label)"
+          },
+          "settings": {
+            "refreshRate": 3,
+            "nodeColorScheme": "nivo"
+          },
+          "schema": [
+            [
+              "Component",
+              "ip",
+              "name"
+            ],
+            [
+              "Quarantine",
+              "name"
+            ]
+          ]
+        },
+        {
+          "id": "1c7dbd50-b9c9-4273-9a01-f5085cc4db39",
+          "title": "SOAR Responses",
+          "query": "MATCH p=(s:SOAR)-[r:RESPONSE]->(resp:RESPONSE)\nRETURN resp.soar_id AS ID, resp.source as Source, resp.ip AS Address, resp.response AS Response, resp.reason AS Reason, resp.value as Data\nORDER BY resp.soar_id\n",
+          "width": 10,
+          "height": 3,
+          "x": 0,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "columnWidths": "[0.25, 1, 1, 2, 2, 1]",
+            "refreshRate": 3
+          }
+        },
+        {
+          "id": "840347ce-34b6-4d3e-8fbb-97434849f70e",
+          "title": "MPO Data",
+          "query": "\nMATCH p=(host:Component{ip:\"10.0.0.7\"})-[r:DATA]->(d:Digital_Twin)\nRETURN d.dt_id AS ID, host.ip AS Address, d.data AS Data\nORDER BY d.dt_id DESC\nLIMIT 30\n\n\n\n",
+          "width": 4,
+          "height": 6,
+          "x": 10,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "refreshRate": 3
+          }
+        },
+        {
+          "id": "e15374c9-8098-47ce-9bf5-ced09dff7e5c",
+          "title": "SLD Data",
+          "query": "\nMATCH p=(host:Component{ip:\"10.0.0.8\"})-[r:DATA]->(d:Digital_Twin)\nRETURN d.dt_id AS ID, host.ip AS Address, d.data AS Data\nORDER BY d.dt_id DESC\nLIMIT 30\n\n\n",
+          "width": 4,
+          "height": 6,
+          "x": 14,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "refreshRate": 3
+          }
+        }
+      ]
     }
   ],
   "parameters": {},

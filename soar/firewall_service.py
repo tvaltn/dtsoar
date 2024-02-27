@@ -1,7 +1,7 @@
 import requests
 
 # Firewall Service class used for creating and modifying Firewall Rules
-# Currently only supporting a RYU REST Firewall
+# Currently only supporting a RYU REST Firewall on the MQTT Gateway
 class Firewall_Service:
     def __init__(self, ip):
         self.ip = ip
@@ -36,7 +36,6 @@ class Firewall_Service:
                         print(response.text)
 
                     
-
     # Function used at start-up to enable communication between all hosts and their respective gateway
     def enable_all_communication(self):
         print("[FIREWALL SERVICE] Enabling All Communication")
@@ -60,24 +59,31 @@ class Firewall_Service:
 
 
         # Same rule but for the 3 hosts connecting to the OPC-UA host through the OPC-UA switch
-        firewallURL = f'http://{self.ip}:8080/firewall/rules/0000000000000002' # switch 2
-        dst = '10.0.0.2' # OPC-UA
+        # (Data to the OPC-UA is currently disabled)
+        #firewallURL = f'http://{self.ip}:8080/firewall/rules/0000000000000002' # switch 2
+        #dst = '10.0.0.2' # OPC-UA
 
-        self.__open_communication(firewallURL, dst, '10.0.0.3') # HBW
-        self.__open_communication(firewallURL, dst, '10.0.0.4') # VGR
-        self.__open_communication(firewallURL, dst, '10.0.0.5') # SSC
+        #self.__open_communication(firewallURL, dst, '10.0.0.3') # HBW
+        #self.__open_communication(firewallURL, dst, '10.0.0.4') # VGR
+        #self.__open_communication(firewallURL, dst, '10.0.0.5') # SSC
 
     # Function called to isolate a Mininet Host away from its gateway(s)
     def disable_communication(self, mininet_host):
         print(f"[FIREWALL SERVICE] Disabling Communication From Host {mininet_host}")
 
         mqttURL = f'http://{self.ip}:8080/firewall/rules/0000000000000001' # switch 1
-        opcuaURL = f'http://{self.ip}:8080/firewall/rules/0000000000000002' # switch 2
+        #opcuaURL = f'http://{self.ip}:8080/firewall/rules/0000000000000002' # switch 2
 
         self.__remove_communication(mqttURL, mininet_host)
-        self.__remove_communication(opcuaURL, mininet_host)
+        #self.__remove_communication(opcuaURL, mininet_host)
 
     # Function called to enable communication to a mininet host again
     def enable_communication(self, mininet_host):
-        # TBD
-        pass
+        firewallURL = f'http://{self.ip}:8080/firewall/rules/0000000000000001' # switch 1
+        dst = '10.0.0.1' # MQTT
+        self.__open_communication(firewallURL, dst, mininet_host)
+
+        #if mininet_host == '10.0.0.3' or mininet_host == '10.0.0.4' or mininet_host == '10.0.0.5':
+            #firewallURL = f'http://{self.ip}:8080/firewall/rules/0000000000000001' # switch 2
+            #dst = '10.0.0.2' # OPC-UA
+            #self.__open_communication(firewallURL, dst, mininet_host)

@@ -62,7 +62,10 @@ for line in mqtt:
 
     mqtt_socket.send(bytes(data, 'utf-8'))
     print(data)
-    time.sleep(2)
+    time.sleep(1)
+
+    response = mqtt_socket.recv(1024)
+    print(response)
 
 # Close files
 if mqtt:

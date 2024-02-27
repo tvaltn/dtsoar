@@ -193,11 +193,16 @@ To run a gateway, find the **gw1_MQTT** terminal and run:
 python gateway.py
 ```
 
-To run data through a host, open one of the host terminals *(only DPS does something right now)* and run:
+To run data through a host, open one of the host terminals and run:
 
 ```
 python host.py <data_file>
 ```
+
+Files that currently trigger something in the SOAR system:
+DPS_MQTT.csv
+MPO_MQTT.csv
+SLD_MQTT.csv
 
 Press Ctrl+V to cancel the host program.
 

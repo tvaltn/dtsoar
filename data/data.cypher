@@ -1,5 +1,5 @@
-CREATE (s1_mqtt:Switch{name:"Switch MQTT"})-[:CONNECTION]->(gw1_MQTT:Gateway{name:"MQTT Gateway"})
-CREATE (s2_opcua:Switch{name:"Switch OPC-UA"})-[:CONNECTION]->(gw2_OPCUA:Gateway{name:"OPC-UA Gateway"})
+CREATE (s1_mqtt:Switch{name:"Switch MQTT", dpid:"0000000000000001"})-[:CONNECTION]->(gw1_MQTT:Gateway{name:"MQTT Gateway", ip:"10.0.0.1"})
+CREATE (s2_opcua:Switch{name:"Switch OPC-UA", dpid:"0000000000000002"})-[:CONNECTION]->(gw2_OPCUA:Gateway{name:"OPC-UA Gateway", ip:"10.0.0.2"})
 CREATE (h1_HBW:Component{name:"HBW", ip:"10.0.0.3"})-[:CONNECTION]->(s1_mqtt)
 CREATE (h2_VGR:Component{name:"VGR", ip:"10.0.0.4"})-[:CONNECTION]->(s1_mqtt)
 CREATE (h3_SSC:Component{name:"SSC", ip:"10.0.0.5"})-[:CONNECTION]->(s1_mqtt)

@@ -7,18 +7,14 @@ class Event_Handler:
         self.length = 0 # keeping track of length to know when new events get added
 
     def check_events(self):
-        try:
-            response = requests.get(f'http://{self.ip}:8000/events')
-            data = response.json()
+        response = requests.get(f'http://{self.ip}:8000/events')
+        data = response.json()
+        
+        if len(data) > self.length: # Then we have received new data
+            print("[EVENT HANDLER] New Data Captured")
             
-            if len(data) > self.length: # Then we have received new data
-                print("[EVENT HANDLER] New Data Captured")
-                
-                leng = self.length
-                self.length = len(data)
-                return data[leng:]
+            leng = self.length
+            self.length = len(data)
+            return data[leng:]
 
-            return 0 # no new data
-        except:
-            print("Host unreachable")
-            return 0
+        return 0 # no new data

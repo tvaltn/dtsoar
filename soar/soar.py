@@ -20,47 +20,77 @@ class Soar:
         access = Access_Service(ip)
         event_handler = Event_Handler(ip)
         data_processor = Data_Processor()
-        playbook = json.load(open('playbook.json'))
-        orchestrator = Orchestrator(playbook)
-        action_automator = Action_Automator()
+        orchestrator = Orchestrator()
+        action_automator = Action_Automator(firewall, access)
 
-        # Initialize and clean up:
-        firewall.enable_all_communication()
-        access.enable_access_rules()
+        # Initialize tools on test bed:
+        try: 
+            firewall.enable_all_communication()
+            access.enable_access_rules()
+        except (KeyboardInterrupt, requests.exceptions.RequestException) as e:
+            print(e)
+            print("[ERORR] No Connection to Mininet Firewall or OPA")
+            sys.exit()
 
-        url = "http://localhost:7474/db/neo4j/tx/commit"
-        data = {"statements":[
-                {"statement":"MATCH ()-[r:QUARANTINE]->() DELETE r"}, # Delete old components in quarantine
-                {"statement":"MATCH ()-[r:DATA]->(n:Digital_Twin) DELETE r, n"}, # Delete old Digital Twin data
-                {"statement":"MATCH (s:SOAR)-[r:RESPONSE]->(resp:RESPONSE) DELETE s, r, resp"}]} # Delete old SOAR responses
-        response = requests.post(url, auth=('neo4j', 'soar-neo4j'), json=data)
-        print(response)
+        # Clean up old data from database:
+        try: 
+            url = "http://localhost:7474/db/neo4j/tx/commit"
+            data = {"statements":[
+                    {"statement":"MATCH ()-[r:QUARANTINE]->() DELETE r"}, # Delete old components in quarantine
+                    {"statement":"MATCH ()-[r:DATA]->(n:Digital_Twin) DELETE r, n"}, # Delete old Digital Twin data
+                    {"statement":"MATCH (s:SOAR)-[r:RESPONSE]->(resp:RESPONSE) DELETE s, r, resp"}]} # Delete old SOAR responses
+            response = requests.post(url, auth=('neo4j', 'soar-neo4j'), json=data)
+            print(response)
+        except (KeyboardInterrupt, requests.exceptions.RequestException) as e:
+            print(e)
+            print("[ERROR] No Connection to Neo4j database")
+            sys.exit()
 
-        # Set up the Digital Twin
+        # Set up run event for threads
         run_event = Event()
         run_event.set()
-        digital_twin = Digital_Twin(ip, run_event)
-        thread = Thread(target=digital_twin.data_reception) # seperate thread for digital twin
-        thread.start()
+
+        # Set up the digital twin threads
+        digital_twin = Digital_Twin(ip, run_event, orchestrator, action_automator)
+        thread1 = Thread(target=digital_twin.data_reception) # seperate thread for digital twin
+        thread1.start()
+        thread2 = Thread(target=digital_twin.incident_handler) # another thread for digital twin
+        thread2.start()
 
         # Infinite loop for the SOAR
         while True:
             try:
                 response = event_handler.check_events()
                 if response == 0: # no response
-                    time.sleep(1)
+                    #time.sleep(1) # Comment this part out for real-time
                     continue
                 else:
                     processed_data = data_processor.interpret_event_data(response)
-                    for data in processed_data:
-                        for ip, value in data.items():
-                            response = orchestrator.get_playbook_rule(value, ip)
-                            action_automator.automate_plan(firewall, ip, response)
-            except KeyboardInterrupt:
-                # Clear the event and join the thread to exit the program
+                    for ip, reason, value in processed_data:
+                            response = orchestrator.get_playbook_rule(ip, reason, value, "IDS")
+                            action_automator.automate_plan(ip, response)
+
+            except (KeyboardInterrupt):
+                # Clear the event and join the threads to exit the program
+                print("Initiating Clean Exit of Program")
                 run_event.clear()
-                thread.join()
+                thread1.join()
+                thread2.join()
                 sys.exit()
+            except (requests.exceptions.RequestException):
+                print("Connection refused by the server...")
+                print("Retrying in 5 seconds...")
+
+                try:
+                    time.sleep(5)
+                except (KeyboardInterrupt):
+                    # Clear the event and join the threads to exit the program
+                    print("Initiating Clean Exit of Program")
+                    run_event.clear()
+                    thread1.join()
+                    thread2.join()
+                    sys.exit()
+                continue
 
 # Add Mininet IP Address from CLI
 if len(sys.argv) == 1:

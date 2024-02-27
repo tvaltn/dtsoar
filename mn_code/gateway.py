@@ -38,6 +38,7 @@ def service_connection(key, mask):
         recv_data = sock.recv(1024)  # Should be ready to read
         if recv_data:
             print("RECEIVED: " + recv_data.decode("utf-8"))
+            sock.send(bytes("OK", 'utf-8'))
         else:
             print(f"Closing connection to {data.addr}")
             sel.unregister(sock)

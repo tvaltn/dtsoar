@@ -21,7 +21,7 @@ DELETE r
 
 // Receive data of DPS from Digital Twin
 MATCH (host:Component{ip:"10.0.0.6"})
-CREATE (host)-[:DATA]->(digital_twin:Digital_Twin{data:"2844"})
+CREATE (host)-[:DATA]->(digital_twin:Digital_Twin{ip:"10.0.0.6", dt_id:1, data:"2844"})
 
 // Remove all Digital Twin information
 MATCH ()-[r:DATA]->(n:Digital_Twin)
