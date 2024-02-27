@@ -200,9 +200,8 @@ python host.py <data_file>
 ```
 
 Files that currently trigger something in the SOAR system:
-DPS_MQTT.csv
-MPO_MQTT.csv
-SLD_MQTT.csv
+
+DPS_MQTT.csv, MPO_MQTT.csv, SLD_MQTT.csv
 
 Press Ctrl+V to cancel the host program.
 
