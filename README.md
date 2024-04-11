@@ -177,6 +177,8 @@ Dependencies:
 pip install requests
 ```
 
+**In the .env file, add OpenAI API Key, alongside Mininet IP Address**
+
 Inside the soar directory, run:
 
 ```
@@ -185,9 +187,10 @@ python soar.py <mininet_ip>
 
 ## Running Scenarios
 
-From the pop-up terminals after running mininet, you can run data through the factory components to the gateway. Currently only the MQTT gateway is properly configured.
+From the pop-up terminals after running mininet, you can run data through the factory components to the gateway.
+Run MQTT files for data based experiments, run OPC-UA files for DDOS experiments.
 
-To run a gateway, find the **gw1_MQTT** terminal and run:
+To run a gateway, find the **gw1_MQTT** or the **gw2_OPC-UA** terminal and run:
 
 ```
 python gateway.py
@@ -198,10 +201,6 @@ To run data through a host, open one of the host terminals and run:
 ```
 python host.py <data_file>
 ```
-
-Files that currently trigger something in the SOAR system:
-
-DPS_MQTT.csv, MPO_MQTT.csv, SLD_MQTT.csv
 
 Press Ctrl+V to cancel the host program.
 
