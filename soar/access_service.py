@@ -17,4 +17,7 @@ class Access_Service:
         policies = open('policies.rego').read()
         policies += "\n\nviolation[packet.data] {\n\tpacket := input.packet\n \tpacket.data " + rule + "\n}"
 
+        file = open('policies.rego', "w")
+        file.write(policies)
+
         response = requests.put(f'http://{self.ip}:8181/v1/policies/access_policies', data=policies)

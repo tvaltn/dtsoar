@@ -59,23 +59,29 @@ class Firewall_Service:
 
 
         # Same rule but for the 3 hosts connecting to the OPC-UA host through the OPC-UA switch
-        # (Data to the OPC-UA is currently disabled)
-        #firewallURL = f'http://{self.ip}:8080/firewall/rules/0000000000000002' # switch 2
-        #dst = '10.0.0.2' # OPC-UA
+        firewallURL = f'http://{self.ip}:8080/firewall/rules/0000000000000002' # switch 2
+        dst = '10.0.0.2' # OPC-UA
 
-        #self.__open_communication(firewallURL, dst, '10.0.0.3') # HBW
-        #self.__open_communication(firewallURL, dst, '10.0.0.4') # VGR
-        #self.__open_communication(firewallURL, dst, '10.0.0.5') # SSC
+        self.__open_communication(firewallURL, dst, '10.0.0.3') # HBW
+        self.__open_communication(firewallURL, dst, '10.0.0.4') # VGR
+        self.__open_communication(firewallURL, dst, '10.0.0.5') # SSC
 
     # Function called to isolate a Mininet Host away from its gateway(s)
-    def disable_communication(self, mininet_host):
-        print(f"[FIREWALL SERVICE] Disabling Communication From Host {mininet_host}")
+    def disable_communication(self, host_address):
+        print(f"[FIREWALL SERVICE] Disabling Communication From Host {host_address}")
+
+        # Update dashboard
+        url = "http://localhost:7474/db/neo4j/tx/commit"
+        data = {"statements":[
+            {"statement":"MATCH (host:Component{ip:$ip}), (quarantine:Quarantine{name:$name}) CREATE (host)-[:QUARANTINE]->(quarantine)",
+                "parameters":{"ip": host_address, "name":"Quarantine"}}]}
+        requests.post(url, auth=('neo4j', 'soar-neo4j'), json=data)
 
         mqttURL = f'http://{self.ip}:8080/firewall/rules/0000000000000001' # switch 1
-        #opcuaURL = f'http://{self.ip}:8080/firewall/rules/0000000000000002' # switch 2
+        opcuaURL = f'http://{self.ip}:8080/firewall/rules/0000000000000002' # switch 2
 
-        self.__remove_communication(mqttURL, mininet_host)
-        #self.__remove_communication(opcuaURL, mininet_host)
+        self.__remove_communication(mqttURL, host_address)
+        self.__remove_communication(opcuaURL, host_address)
 
     # Function called to enable communication to a mininet host again
     def enable_communication(self, mininet_host):
@@ -83,7 +89,21 @@ class Firewall_Service:
         dst = '10.0.0.1' # MQTT
         self.__open_communication(firewallURL, dst, mininet_host)
 
-        #if mininet_host == '10.0.0.3' or mininet_host == '10.0.0.4' or mininet_host == '10.0.0.5':
-            #firewallURL = f'http://{self.ip}:8080/firewall/rules/0000000000000001' # switch 2
-            #dst = '10.0.0.2' # OPC-UA
-            #self.__open_communication(firewallURL, dst, mininet_host)
+        if mininet_host == '10.0.0.3' or mininet_host == '10.0.0.4' or mininet_host == '10.0.0.5':
+            firewallURL = f'http://{self.ip}:8080/firewall/rules/0000000000000002' # switch 2
+            dst = '10.0.0.2' # OPC-UA
+            self.__open_communication(firewallURL, dst, mininet_host)
+
+    # Function called to deploy a backup gateway, currently it just reroutes traffic from hosts from the
+    # original OPC-UA gateway to a backup one
+    def deploy_backup_gateway(self, mininet_host):
+        opcuaURL = f'http://{self.ip}:8080/firewall/rules/0000000000000002' # switch 2
+        response = requests.get(opcuaURL)
+
+        dst = "10.0.0.9"
+
+        for items in response.json():
+            for rules in items['access_control_list']:
+                for rule in rules['rules']:
+                    if rule['nw_dst'] != "10.0.0.2":
+                        self.__open_communication(opcuaURL, rule['nw_dst'], dst)

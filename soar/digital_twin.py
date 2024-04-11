@@ -39,10 +39,18 @@ class Digital_Twin:
         # But for simulating the data this works just fine
         self.ids_tracker = ["No Value"]
 
+        # Tracker for time, we just use a simple id and increment every second
+        self.time = 0
+
+        self.threshold = 40 # Threshold for packets per cycle
+
+
 
     # This method retrieves information about the physical twin and saves it to the database
     def data_reception(self):
         while self.run_event.is_set():
+            packet_count = 0 # counting the amount of packets we have received
+
             try:
                 response = requests.get(f'http://{self.ip}:8001/digital_twin')
                 data = response.json()
@@ -54,6 +62,7 @@ class Digital_Twin:
                     url = "http://localhost:7474/db/neo4j/tx/commit"
 
                     for info in data[leng:]:
+                        packet_count += 1 
                         for ip, value in info.items():
 
                             # Get ID and update it
@@ -81,6 +90,17 @@ class Digital_Twin:
                 time.sleep(5)
                 continue
 
+            #self.analysis_file() # if doing analysis, comment out if not, it writes to a file
+            #self.ddos_analysis(packet_count) # if doing analysis, comment out if not, it writes to a file
+            
+            #print(packet_count)
+
+            # If packet count is over threshold we trigger a mitigative response to a possible DDOS attack
+            if packet_count > self.threshold:
+                self.ddos_response()
+
+            time.sleep(0.5)
+
 
     # This method processes the digital twin data to check for incidents
     def incident_handler(self):
@@ -104,13 +124,52 @@ class Digital_Twin:
             if result[0][1] in self.ids_tracker:
                 continue
 
+            print("[DIGITAL TWIN] Caught Data Violation")
+
             # Do two things with the result, first fix the missing access control,
             # and then deploy fix on the data violation
             for ip, reason, value in result:
-                self.ids_tracker.append(reason) # Add the reason to our list to avoid future false positives
-                
-                response = self.orchestrator.get_playbook_rule(ip, "Missing Access Control", "AC Fix", "Digital Twin")
-                self.action_automator.automate_plan(reason, response)
                 response = self.orchestrator.get_playbook_rule(ip, reason, value, "Digital Twin")
-                self.action_automator.automate_plan(ip, response)
+                if response:
+                    self.ids_tracker.append(reason) # Add the reason to our list to avoid future false positives
+                    self.action_automator.automate_plan(ip, response)
+                    response = self.orchestrator.get_playbook_rule(ip, "Missing Access Control", "AC Fix", "Digital Twin")
+                    self.action_automator.automate_plan(reason, response)
 
+    # Create a DDOS mitigation response, we want to do 2 things;
+    # First off, isolate devices that have sent too many packages in the last cycle
+    # Second, reroute traffic to a backup gateway where non-infected devices can keep sending data to
+    def ddos_response(self):
+        isolation_list = []
+
+        # Here you could do some proper checks to see what devices to isolate, but we're taking the easy route
+        isolation_list.append("10.0.0.3")
+        isolation_list.append("10.0.0.4")
+
+        # Isolate the devices that had too high of a packet count
+        for ip in isolation_list:
+            response = self.orchestrator.get_playbook_rule(ip, "Packet Count Too High", 0, "Digital Twin")
+            self.action_automator.automate_plan(ip, response)
+        
+        # Deploy the backup gateway
+        response = self.orchestrator.get_playbook_rule(0, "DDOS Attack", 0, "Digital Twin")
+        self.action_automator.automate_plan(0, response)
+        
+        
+
+    def analysis_file(self):
+        file = open("data/devices.csv", "a")
+        file.write(str(self.time))
+        for x in self.identification:
+            for key, id in x.items():
+                file.write(","+ str(id-1))
+        file.write("\n")
+        file.close()
+        self.time += 1
+
+    def ddos_analysis(self, packet_count):
+        file = open("data/ddos.csv", "a")
+        file.write(str(self.time) + "," + str(packet_count))
+        file.write("\n")
+        file.close()
+        self.time += 1

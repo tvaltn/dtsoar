@@ -42,9 +42,6 @@ class MyTopo(Topo):
         self.addLink(host_OPCUA_gateway, switch_opcua)
 
         # Links between factory component hosts and the MQTT switch (all 6 hosts)
-        self.addLink(host_HBW, switch_mqtt)
-        self.addLink(host_VGR, switch_mqtt)
-        self.addLink(host_SSC, switch_mqtt)
         self.addLink(host_DPS, switch_mqtt)
         self.addLink(host_MPO, switch_mqtt)
         self.addLink(host_SLD, switch_mqtt)

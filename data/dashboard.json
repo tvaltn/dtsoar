@@ -2,7 +2,7 @@
   "title": "SOAR Dashboard",
   "version": "2.4",
   "settings": {
-    "pagenumber": 0,
+    "pagenumber": 3,
     "editable": true,
     "fullscreenEnabled": false,
     "parameters": {},
@@ -108,16 +108,58 @@
               "20": [
                 -32.12330186281916,
                 -0.2386639077228292
+              ],
+              "146": [
+                8.646094423185433,
+                -1.911584249162602
+              ],
+              "147": [
+                -14.61546083142248,
+                10.962406622065501
+              ],
+              "148": [
+                2.2463657168801032,
+                -18.988818008459216
+              ],
+              "149": [
+                14.093389179490032,
+                15.559685005845925
+              ],
+              "150": [
+                -24.14378271811217,
+                -5.914949556663253
+              ],
+              "151": [
+                27.97150655269275,
+                -18.627942506751747
+              ],
+              "152": [
+                -6.180277427037243,
+                25.598881142379675
+              ],
+              "153": [
+                -12.84967140377885,
+                -28.72367979707931
+              ],
+              "154": [
+                36.1248430252862,
+                11.661862368218554
+              ],
+              "155": [
+                -27.884988623067052,
+                11.00207990205452
               ]
             }
           },
           "schema": [
             [
               "Switch",
+              "dpid",
               "name"
             ],
             [
               "Gateway",
+              "ip",
               "name"
             ],
             [
@@ -138,7 +180,7 @@
           "type": "table",
           "selection": {},
           "settings": {
-            "refreshRate": 3,
+            "refreshRate": 0,
             "columnWidths": "[0.25, 1, 1, 2, 2, 1]"
           }
         },
@@ -156,7 +198,7 @@
             "Quarantine": "(no label)"
           },
           "settings": {
-            "refreshRate": 3,
+            "refreshRate": 0,
             "frozen": false,
             "nodePositions": {},
             "nodeColorScheme": "nivo"
@@ -184,7 +226,7 @@
           "type": "table",
           "selection": {},
           "settings": {
-            "refreshRate": 3,
+            "refreshRate": 0,
             "refreshButtonEnabled": false,
             "autorun": true
           },
@@ -201,7 +243,7 @@
           "type": "table",
           "selection": {},
           "settings": {
-            "refreshRate": 3
+            "refreshRate": 0
           }
         },
         {
@@ -215,7 +257,7 @@
           "type": "table",
           "selection": {},
           "settings": {
-            "refreshRate": 3
+            "refreshRate": 0
           }
         },
         {
@@ -229,7 +271,7 @@
           "type": "table",
           "selection": {},
           "settings": {
-            "refreshRate": 3
+            "refreshRate": 0
           }
         },
         {
@@ -243,7 +285,7 @@
           "type": "table",
           "selection": {},
           "settings": {
-            "refreshRate": 3
+            "refreshRate": 0
           }
         },
         {
@@ -257,44 +299,44 @@
           "type": "table",
           "selection": {},
           "settings": {
-            "refreshRate": 3
+            "refreshRate": 0
           }
         }
       ]
     },
     {
-      "title": "Second Dashboard",
+      "title": "First Dashboard",
       "reports": [
         {
           "id": "827c361d-993c-4048-b7e6-da074ccc9777",
           "title": "SOAR Responses",
-          "query": "MATCH p=(s:SOAR)-[r:RESPONSE]->(resp:RESPONSE)\nRETURN resp.soar_id AS ID, resp.source as Source, resp.ip AS Address, resp.response AS Response, resp.reason AS Reason, resp.value as Data\nORDER BY resp.soar_id\n\n\n\n",
+          "query": "MATCH (s:SOAR)-[r:RESPONSE]->(resp:RESPONSE), (host:Component{ip:resp.ip})\nRETURN resp.soar_id AS ID, resp.source as Source, host.name AS Device, resp.reason AS Incident, resp.response AS Response\nORDER BY resp.soar_id\n\n\n\n",
           "width": 10,
-          "height": 2,
+          "height": 3,
           "x": 0,
           "y": 0,
           "type": "table",
           "selection": {},
           "settings": {
-            "columnWidths": "[0.25, 1, 1, 2, 2, 1]",
-            "refreshRate": 3
+            "columnWidths": "[0.5, 1, 0.75, 2, 2]",
+            "refreshRate": 0
           }
         },
         {
           "id": "190b2ca2-8bbc-4131-bf3f-0d605ef3534b",
           "title": "Quarantine",
           "query": "MATCH p=(h:Component)-[r:QUARANTINE]->(q:Quarantine)\nRETURN p LIMIT 25\n\n\n",
-          "width": 10,
+          "width": 7,
           "height": 3,
-          "x": 0,
-          "y": 2,
+          "x": 10,
+          "y": 4,
           "type": "graph",
           "selection": {
             "Component": "name",
-            "Quarantine": "name"
+            "Quarantine": "(no label)"
           },
           "settings": {
-            "refreshRate": 3,
+            "refreshRate": 0,
             "nodeColorScheme": "nivo"
           },
           "schema": [
@@ -311,10 +353,42 @@
         },
         {
           "id": "40124a7d-b812-47d4-82ef-a4d5db2f4f6b",
+          "title": "SOAR Responses",
+          "query": "MATCH p=(s:SOAR)-[r:RESPONSE]->(resp:RESPONSE)\nRETURN p LIMIT 25",
+          "width": 10,
+          "height": 4,
+          "x": 0,
+          "y": 3,
+          "type": "graph",
+          "selection": {
+            "SOAR": "name",
+            "RESPONSE": "soar_id"
+          },
+          "settings": {
+            "nodeColorScheme": "paired"
+          },
+          "schema": [
+            [
+              "SOAR",
+              "name"
+            ],
+            [
+              "RESPONSE",
+              "reason",
+              "response",
+              "ip",
+              "source",
+              "value",
+              "soar_id"
+            ]
+          ]
+        },
+        {
+          "id": "6febd8bc-756a-442c-8534-13b4e39cdb8f",
           "title": "DPS Data",
-          "query": "MATCH p=(host:Component{ip:\"10.0.0.6\"})-[r:DATA]->(d:Digital_Twin)\nRETURN d.dt_id AS ID, host.ip AS Address, d.data AS Data\nORDER BY d.dt_id DESC\nLIMIT 30\n\n",
-          "width": 4,
-          "height": 5,
+          "query": "\nMATCH p=(host:Component{ip:\"10.0.0.6\"})-[r:DATA]->(d:Digital_Twin)\nRETURN d.dt_id AS ID, host.ip AS Address, d.data AS Data\nORDER BY d.dt_id DESC\nLIMIT 30\n\n",
+          "width": 7,
+          "height": 4,
           "x": 10,
           "y": 0,
           "type": "table",
@@ -324,24 +398,47 @@
       ]
     },
     {
-      "title": "Third Dashboard",
+      "title": "Second Dashboard",
       "reports": [
         {
           "id": "dbf90578-9862-49cf-a93c-82e1cc5e6daa",
           "title": "Quarantine",
           "query": "MATCH p=(h:Component)-[r:QUARANTINE]->(q:Quarantine)\nRETURN p LIMIT 25\n\n\n",
-          "width": 10,
+          "width": 8,
           "height": 3,
-          "x": 0,
-          "y": 3,
+          "x": 10,
+          "y": 4,
           "type": "graph",
           "selection": {
             "Component": "name",
             "Quarantine": "(no label)"
           },
           "settings": {
-            "refreshRate": 3,
-            "nodeColorScheme": "nivo"
+            "refreshRate": 0,
+            "nodeColorScheme": "nivo",
+            "frozen": true,
+            "nodePositions": {
+              "150": [
+                12.685196735763098,
+                0.14592271667481782
+              ],
+              "151": [
+                -14.6517296267815,
+                14.507287462774016
+              ],
+              "154": [
+                24.97442581455232,
+                -10.421664877242407
+              ],
+              "155": [
+                -24.78598852631356,
+                -9.884089526971266
+              ],
+              "156": [
+                -0.4799505276057774,
+                -0.08686227992432727
+              ]
+            }
           },
           "schema": [
             [
@@ -358,7 +455,7 @@
         {
           "id": "1c7dbd50-b9c9-4273-9a01-f5085cc4db39",
           "title": "SOAR Responses",
-          "query": "MATCH p=(s:SOAR)-[r:RESPONSE]->(resp:RESPONSE)\nRETURN resp.soar_id AS ID, resp.source as Source, resp.ip AS Address, resp.response AS Response, resp.reason AS Reason, resp.value as Data\nORDER BY resp.soar_id\n",
+          "query": "MATCH (s:SOAR)-[r:RESPONSE]->(resp:RESPONSE), (host:Component{ip:resp.ip})\nRETURN resp.soar_id AS ID, resp.source as Source, host.name AS Device, resp.reason AS Incident, resp.response AS Response\nORDER BY resp.soar_id\n\n",
           "width": 10,
           "height": 3,
           "x": 0,
@@ -366,8 +463,8 @@
           "type": "table",
           "selection": {},
           "settings": {
-            "columnWidths": "[0.25, 1, 1, 2, 2, 1]",
-            "refreshRate": 3
+            "refreshRate": 0,
+            "columnWidths": "[0.5, 1, 0.75, 2, 2]"
           }
         },
         {
@@ -375,13 +472,13 @@
           "title": "MPO Data",
           "query": "\nMATCH p=(host:Component{ip:\"10.0.0.7\"})-[r:DATA]->(d:Digital_Twin)\nRETURN d.dt_id AS ID, host.ip AS Address, d.data AS Data\nORDER BY d.dt_id DESC\nLIMIT 30\n\n\n\n",
           "width": 4,
-          "height": 6,
+          "height": 4,
           "x": 10,
           "y": 0,
           "type": "table",
           "selection": {},
           "settings": {
-            "refreshRate": 3
+            "refreshRate": 0
           }
         },
         {
@@ -389,14 +486,254 @@
           "title": "SLD Data",
           "query": "\nMATCH p=(host:Component{ip:\"10.0.0.8\"})-[r:DATA]->(d:Digital_Twin)\nRETURN d.dt_id AS ID, host.ip AS Address, d.data AS Data\nORDER BY d.dt_id DESC\nLIMIT 30\n\n\n",
           "width": 4,
-          "height": 6,
+          "height": 4,
           "x": 14,
           "y": 0,
           "type": "table",
           "selection": {},
           "settings": {
-            "refreshRate": 3
+            "refreshRate": 0
           }
+        },
+        {
+          "id": "44428910-764c-48f7-8f8d-0f1d235bdd05",
+          "title": "SOAR Responses",
+          "query": "\n\nMATCH p=(s:SOAR)-[r:RESPONSE]->(resp:RESPONSE)\nRETURN p LIMIT 25\n",
+          "width": 10,
+          "height": 4,
+          "x": 0,
+          "y": 3,
+          "type": "graph",
+          "selection": {
+            "SOAR": "name",
+            "RESPONSE": "soar_id"
+          },
+          "settings": {
+            "nodeColorScheme": "paired",
+            "frozen": true,
+            "nodePositions": {
+              "157": [
+                -1.6610645057334787,
+                2.6175527651033397
+              ],
+              "306": [
+                -26.790876955171214,
+                2.7754069924900846
+              ],
+              "307": [
+                25.23374046053028,
+                -7.813061239450055
+              ],
+              "367": [
+                25.9565990099271,
+                7.632258516339299
+              ],
+              "416": [
+                -14.119185809237049,
+                16.590496434516684
+              ],
+              "417": [
+                3.9927519669388807,
+                -21.639736778366164
+              ],
+              "434": [
+                -10.003701527679759,
+                7.67667466795842
+              ],
+              "450": [
+                -10.003701527679759,
+                7.67667466795842
+              ],
+              "468": [
+                -10.003701527679759,
+                7.67667466795842
+              ],
+              "509": [
+                -10.003701527679759,
+                7.67667466795842
+              ],
+              "519": [
+                0.9913371948505377,
+                -26.327484334180916
+              ],
+              "520": [
+                17.009127160315153,
+                19.436044806299385
+              ]
+            }
+          },
+          "schema": [
+            [
+              "SOAR",
+              "name"
+            ],
+            [
+              "RESPONSE",
+              "reason",
+              "response",
+              "ip",
+              "source",
+              "value",
+              "soar_id"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Third Dashboard",
+      "reports": [
+        {
+          "id": "f5ef6337-980d-4eee-adb8-e55b2351d103",
+          "title": "SOAR Responses",
+          "query": "MATCH (s:SOAR)-[r:RESPONSE]->(resp:RESPONSE), (host:Component{ip:resp.ip})\nRETURN resp.soar_id AS ID, resp.source as Source, host.name AS Device, resp.reason AS Incident, resp.response AS Response\nORDER BY resp.soar_id\n\n\n",
+          "width": 10,
+          "height": 4,
+          "x": 0,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "columnWidths": "[0.5, 1, 0.75, 2, 2]"
+          }
+        },
+        {
+          "id": "65a75ed9-90d7-49a8-85db-c16852000eb2",
+          "title": "AI Accepted Solutions",
+          "query": "MATCH p=(ai:AI)-[s:SOLUTION]->(sol:SOLUTION)\nWHERE sol.accepted = \"True\"\nRETURN sol.ai_id AS ID, sol.reason AS Incident, sol.response AS Solution, sol.accepted AS Accepted\nORDER BY sol.ai_id\n\n\n",
+          "width": 7,
+          "height": 4,
+          "x": 10,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "columnWidths": "[0.25, 2, 2, 1.25]"
+          }
+        },
+        {
+          "id": "8f3a6f7f-0547-4e71-820b-2556bb38215a",
+          "title": "AI Pending",
+          "query": "MATCH p=(ai:AI)-[s:SOLUTION]->(sol:SOLUTION)\nWHERE sol.accepted = \"False\"\nRETURN sol.ai_id AS ID, sol.reason AS Incident, sol.response AS Solution, sol.accepted AS Accepted\nORDER BY sol.ai_id\n\n\n",
+          "width": 7,
+          "height": 4,
+          "x": 17,
+          "y": 0,
+          "type": "table",
+          "selection": {},
+          "settings": {
+            "columnWidths": "[0.25, 2, 2, 1.25]"
+          }
+        },
+        {
+          "id": "1afa10dd-7b9b-49ed-8b98-2dadbe52454e",
+          "title": "SOAR Responses",
+          "query": "MATCH p=(s:SOAR)-[r:RESPONSE]->(resp:RESPONSE)\nRETURN p LIMIT 25\n\n\n",
+          "width": 12,
+          "height": 4,
+          "x": 0,
+          "y": 4,
+          "type": "graph",
+          "selection": {
+            "SOAR": "name",
+            "RESPONSE": "soar_id"
+          },
+          "settings": {
+            "nodeColorScheme": "paired",
+            "frozen": true,
+            "nodePositions": {
+              "157": [
+                0.5833215881239591,
+                -4.400168535063033
+              ],
+              "509": [
+                -21.769016851540332,
+                -12.54771977342188
+              ],
+              "519": [
+                24.058464415692338,
+                -20.77758535962418
+              ],
+              "520": [
+                25.25797552423621,
+                2.9991403025966483
+              ],
+              "569": [
+                -15.44267124183162,
+                13.693845524015819
+              ],
+              "580": [
+                -0.8705207170312812,
+                -28.433965106584033
+              ],
+              "581": [
+                13.72104760689633,
+                20.080880648930304
+              ]
+            }
+          },
+          "schema": [
+            [
+              "SOAR",
+              "name"
+            ],
+            [
+              "RESPONSE",
+              "reason",
+              "response",
+              "ip",
+              "source",
+              "value",
+              "soar_id"
+            ]
+          ]
+        },
+        {
+          "id": "fcb683c7-5261-422d-955d-944cb01161d2",
+          "title": "AI Solutions",
+          "query": "MATCH p=(ai:AI)-[s:SOLUTION]->(sol:SOLUTION)\nRETURN p LIMIT 25\n\n\n",
+          "width": 12,
+          "height": 4,
+          "x": 12,
+          "y": 5,
+          "type": "graph",
+          "selection": {
+            "AI": "name",
+            "SOLUTION": "ai_id"
+          },
+          "settings": {
+            "nodeColorScheme": "accent",
+            "frozen": true,
+            "nodePositions": {
+              "158": [
+                -1.2793673919557698,
+                -16.90081394420382
+              ],
+              "570": [
+                -20.03145352931758,
+                10.988573070524115
+              ],
+              "591": [
+                19.380038239523138,
+                11.50393024380677
+              ]
+            }
+          },
+          "schema": [
+            [
+              "AI",
+              "name"
+            ],
+            [
+              "SOLUTION",
+              "device_ip",
+              "reason",
+              "response",
+              "reasoning",
+              "accepted",
+              "ai_id"
+            ]
+          ]
         }
       ]
     }

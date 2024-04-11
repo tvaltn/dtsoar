@@ -18,8 +18,12 @@ class Data_Processor:
                 elif int_value < 0:
                     new_value = "Negative Value"
 
-                elif int_value >= 10000:
-                    new_value = "Value Too Big"
+                # Made up values for a specific security breach type
+                elif int_value == 11111:
+                    new_value = "Malware Detected"
+
+                elif int_value == 22222:
+                    new_value = "Outdated Firmware"
 
                 else:
                     new_value = "OK Value"
@@ -31,7 +35,6 @@ class Data_Processor:
     
     # Reversing the data
     def interpret_playbook_data(self, data):
-
         value = None
 
         match data:
@@ -39,8 +42,9 @@ class Data_Processor:
                 value = "== 0"
             case "Negative Value":
                 value = "< 0"
-            case "Value Too Big":
-                value = ">= 10000"
+            case "Malware Detected":
+                value = "== 11111"
+            case "Outdated Firmware":
+                value = "== 22222"
                     
-        
         return value
