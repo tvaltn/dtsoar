@@ -37,7 +37,6 @@ class Action_Automator:
 
 
 
-
     def old_automate_plan(self, address, response):
         print("[ACTION AUTOMATOR] Automating Response, Updating Dashboard")
         

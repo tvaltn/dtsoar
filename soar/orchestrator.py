@@ -49,6 +49,7 @@ class Orchestrator:
         return False
     
 
+
     # Method for updating database with the created SOAR Response
     def create_database_soar_response(self, address, reason, response, value, source):
         url = "http://localhost:7474/db/neo4j/tx/commit"
