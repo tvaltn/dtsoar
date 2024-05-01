@@ -31,12 +31,12 @@ class Orchestrator:
         playbook = json.load(open('playbook.json'))
 
         for rule in playbook['Playbook Rules']:
-            if rule['Type'] == reason:
+            if rule['type'] == reason:
                 
                 # Update database with the SOAR respose
-                self.create_database_soar_response(address, reason, rule['Response'], value, source)
+                self.create_database_soar_response(address, reason, rule['response'], value, source)
 
-                print("---- Host: ", address, ", Response: ", rule['Response'])
+                print("---- Host: ", address, ", Response: ", rule['response'])
 
                 return rule # return the response
         
@@ -82,14 +82,14 @@ class Orchestrator:
 
             # I'm lazy and for our experiment we will always end up with "Isolate Device" as a response
             # Would need to create the Response Plan in another way if doing it properly
-            update = {"Rule_ID:":str(length+1),
-                      "Source":source,
-                      "Type":type,
-                      "Response":response,
-                      "Response Plan":{
-                        "Service":"ryu_firewall",
-                        "Action":"disable_communication",
-                        "Parameters":{
+            update = {"id:":str(length+1),
+                      "source":source,
+                      "type":type,
+                      "response":response,
+                      "workflow":{
+                        "name":"ryu_firewall",
+                        "type":"disable_communication",
+                        "parameters":{
                             "host_address":"ip"
                         }
                       }

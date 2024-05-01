@@ -15,10 +15,10 @@ class Action_Automator:
 
         print(playbook_rule)
 
-        plan = playbook_rule['Response Plan']
+        plan = playbook_rule['workflow']
 
-        service = plan['Service']
-        action = plan['Action']
+        service = plan['name']
+        action = plan['type']
 
         if service == "ryu_firewall":
             service_call = getattr(self.ryu_firewall, action)

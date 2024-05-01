@@ -1,66 +1,66 @@
 {
     "Playbook Rules":[
         {
-            "Rule_ID":"1",
-            "Source":"Shark Detection",
-            "Type":"No Value",
-            "Response":"Isolate Device",
-            "Response Plan":{
-                "Service":"ryu_firewall",
-                "Action":"disable_communication",
-                "Parameters":{
+            "id":"1",
+            "source":"Shark Detection",
+            "type":"No Value",
+            "response":"Isolate Device",
+            "workflow":{
+                "name":"ryu_firewall",
+                "type":"disable_communication",
+                "parameters":{
                     "host_address":"ip"
                 }
             }
         },
         {
-            "Rule_ID":"2",
-            "Source":"SOAR Processing Unit",
-            "Type":"Negative Value",
-            "Response":"Isolate Device",
-            "Response Plan":{
-                "Service":"ryu_firewall",
-                "Action":"disable_communication",
-                "Parameters":{
+            "id":"2",
+            "source":"SOAR Processing Unit",
+            "type":"Negative Value",
+            "response":"Isolate Device",
+            "workflow":{
+                "name":"ryu_firewall",
+                "type":"disable_communication",
+                "parameters":{
                     "host_address":"ip"
                 }
             }
         },
         {
-            "Rule_ID":"3",
-            "Source":"Digital Twin",
-            "Type":"Missing Access Control",
-            "Response":"Update Access Control",
-            "Response Plan":{
-                "Service":"opa_access_control",
-                "Action":"update_access_rule",
-                "Parameters":{
+            "id":"3",
+            "source":"Digital Twin",
+            "type":"Missing Access Control",
+            "response":"Update Access Control",
+            "workflow":{
+                "name":"opa_access_control",
+                "type":"update_access_rule",
+                "parameters":{
                     "access_policy":"rule"
                 }
             }
         },
         {
-            "Rule_ID":"4",
-            "Source":"Digital Twin",
-            "Type":"Packet Count Too High",
-            "Response":"Isolate Device",
-            "Response Plan":{
-                "Service":"ryu_firewall",
-                "Action":"disable_communication",
-                "Parameters":{
+            "id":"4",
+            "source":"Digital Twin",
+            "type":"Packet Count Too High",
+            "response":"Isolate Device",
+            "workflow":{
+                "name":"ryu_firewall",
+                "type":"disable_communication",
+                "parameters":{
                     "host_address":"ip"
                 }
             }
         },
         {
-            "Rule_ID":"5",
-            "Source":"Digital Twin",
-            "Type":"DDOS Attack",
-            "Response":"Deploy Backup Gateway",
-            "Response Plan":{
-                "Service":"ryu_firewall",
-                "Action":"deploy_backup_gateway",
-                "Parameters":{}
+            "id":"5",
+            "source":"Digital Twin",
+            "type":"DDOS Attack",
+            "response":"Deploy Backup Gateway",
+            "workflow":{
+                "name":"ryu_firewall",
+                "type":"deploy_backup_gateway",
+                "parameters":{}
             }
         }
     ]
