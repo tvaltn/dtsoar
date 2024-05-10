@@ -182,24 +182,34 @@ pip install requests
 Inside the soar directory, run:
 
 ```
-python soar.py <mininet_ip>
+python soar.py
 ```
 
-## Running Scenarios
+# Running Scenarios
 
 From the pop-up terminals after running mininet, you can run data through the factory components to the gateway.
 Run MQTT files for data based experiments, run OPC-UA files for DDOS experiments.
 
-To run a gateway, find the **gw1_MQTT** or the **gw2_OPC-UA** terminal and run:
+## Running data based scenarios
+
+First off, start the Mininet with topology.py. Then run Ryu, OPA and shark.py and soar.py.
+
+Find the **gw1_MQTT** and run:
 
 ```
 python gateway.py
 ```
 
-To run data through a host, open one of the host terminals and run:
+To run data through a host, open one of the host terminals and run (only MQTT files work here):
 
 ```
 python host.py <data_file>
+```
+
+Example on the DPS terminal:
+
+```
+python host.py DPS_MQTT.csv
 ```
 
 Press Ctrl+V to cancel the host program.
@@ -210,3 +220,20 @@ If you want to reset, you have to exit and then re-run:
 2. OPA
 3. Shark
 4. SOAR
+
+## Running DDOS experiment
+
+First off, start the Mininet topology_opcua.py. Then run Ryu, OPA and shark_opti.py.
+
+Find the **gw1_OPC-UA** and run:
+```
+python gateway.py
+```
+
+To run the DDOS experiment, run the 3 OPC-UA data files in their respective terminals:
+
+```
+python host.py HBW_OPC-UA.csv
+python host.py SSC_OPC-UA.csv
+python host.py VGR_OPC-UA.csv
+```
